@@ -69,8 +69,8 @@ export function CreateIncentive() {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setParams((prevParams) => ({ ...prevParams, [name]: value }));
+    const { name, value } = e.target
+    setParams((prevParams) => ({ ...prevParams, [name]: value }))
   };
   
   return (
@@ -79,7 +79,7 @@ export function CreateIncentive() {
         <h3>Incentive Contract Details</h3>
         <p>Factory: {factoryAddress}</p>
       </div>
-      <h3>Test Create Incentive</h3>
+      <h2>Create Incentive</h2>
       <Button onClick={handleCreateIncentive}>Create Incentive</Button>
       <p>set_token_reward</p>
       <TextInput
