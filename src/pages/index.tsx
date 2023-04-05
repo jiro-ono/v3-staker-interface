@@ -1,6 +1,6 @@
 import { useAccount } from 'wagmi'
 
-import { Account, Connect, NetworkSwitcher, CreateIncentive, IncentivesList, Stake, UserStakes } from '../components'
+import { Account, Connect, NetworkSwitcher, CreateIncentive, IncentivesList, Stake, UserStakes, ClaimReward } from '../components'
 
 function Page() {
   const { isConnected } = useAccount()
@@ -19,6 +19,7 @@ function Page() {
           <IncentivesList />
           <Stake />
           <UserStakes />
+          <ClaimReward />
         </>
       )}
     </>
