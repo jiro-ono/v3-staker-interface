@@ -9,7 +9,7 @@ import V3StakerArtifact from '../contracts/artifacts/V3Staker.json'
 const endpoint = "https://api.thegraph.com/subgraphs/name/jiro-ono/v3-staker"
 const USER_STAKES_QUERY = gql`
   query userStakes($address: String!) {
-    stakes(where: $address) {
+    stakes(where: {user: $address}) {
       id
       staker {
         id
@@ -31,7 +31,7 @@ export function UserStakes() {
 
   const { data, isLoading, error } = useQuery("userStakes", () => {
     return request(endpoint, USER_STAKES_QUERY, {
-      "address": address
+      "address": address?.toLowerCase()
     })
   })
 
