@@ -49,7 +49,7 @@ export function UserStakes() {
                   <li>Position: {stakes.position.id}</li>
                   <li>Incentive: {stakes.incentive.id}</li>
                   <li>Staked Timestamp: {stakes.stakedTimestamp}</li>
-                  <li>Active Stake: {stakes.activeStake}</li>
+                  <li>Active Stake: {stakes.activeStake.toString()}</li>
                 </ul>
               </div>
             ))}
