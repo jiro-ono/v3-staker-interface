@@ -3,6 +3,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import V3StakerArtifact from '../contracts/artifacts/V3Staker.json'
+import ERC20Artifact from '../contracts/artifacts/ERC20.json'
 
 export function CreateIncentive() {
   const { address, isConnected } = useAccount()
@@ -22,7 +23,7 @@ export function CreateIncentive() {
     functionName: 'factory',
   })
 
-  const { config, error, isError } = usePrepareContractWrite({
+  const { config: createIncentive, error, isError } = usePrepareContractWrite({
     address: '0x206439339d40aA4Ce1A57CB8Cc400e67B315DD15',
     abi: V3StakerArtifact.abi,
     functionName: 'createIncentive',
@@ -38,15 +39,20 @@ export function CreateIncentive() {
       params.rewardAmount,
     ]
   })
-  const { data, write } = useContractWrite(config)
-  const {
-    data: txData,
-    isSuccess,
-  } = useWaitForTransaction({
-    confirmations: 1,
-    hash: data?.hash,
+
+  const { config: approveRewardToken } = usePrepareContractWrite({
+    address: params.rewardToken,
+    abi: ERC20Artifact.abi,
+    functionName: 'approve',
+    args: [
+      '0x206439339d40aA4Ce1A57CB8Cc400e67B315DD15',
+      '100000000000000000000'
+    ]
   })
-  
+
+  const { data: createIncentiveTx, write: writeCreateIncentive } = useContractWrite(createIncentive)
+  const { data: approveRewardTokenTx, write: writeApproveRewardToken } = useContractWrite(approveRewardToken)
+
   const handleCreateIncentive = async () => {
     if (!isConnected || !address) {
       alert('Please connect your wallet')
@@ -65,7 +71,11 @@ export function CreateIncentive() {
     console.log('vestingPeriod: ', params.vestingPeriod)
     console.log('refundee: ', params.refundee)
 
-    write!()
+    writeCreateIncentive!()
+  }
+
+  const handleApproveRewardToken = async () => {
+    writeApproveRewardToken!()
   }
 
   const handleChange = (e) => {
@@ -80,6 +90,7 @@ export function CreateIncentive() {
         <p>Factory: {factoryAddress}</p>
       </div>
       <h2>Create Incentive</h2>
+      <Button onClick={handleApproveRewardToken}>Approve 100 Reward Token</Button>
       <Button onClick={handleCreateIncentive}>Create Incentive</Button>
       <p>set_token_reward</p>
       <TextInput
