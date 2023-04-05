@@ -71,7 +71,7 @@ export function CreateIncentive() {
   const handleChange = (e) => {
     const { name, value } = e.target
     setParams((prevParams) => ({ ...prevParams, [name]: value }))
-  };
+  }
   
   return (
     <div>
