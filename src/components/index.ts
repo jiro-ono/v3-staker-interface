@@ -6,3 +6,4 @@ export { IncentivesList } from "./IncentivesList"
 export { Stake } from "./Stake"
 export { UserStakes } from './UserStakes'
 export { ClaimReward } from './ClaimReward'
+export { RewardInfo } from './RewardInfo'
