@@ -1,8 +1,7 @@
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction, useContractRead, useAccount} from 'wagmi'
+import { useContractRead, useAccount } from 'wagmi'
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { request, gql } from 'graphql-request'
-import { useQuery } from 'react-query'
 import { Contract, ethers } from 'ethers'
 
 import V3StakerArtifact from '../contracts/artifacts/V3Staker.json'
@@ -21,6 +20,52 @@ const INCENTIVE_ID_QUERY = gql`
     }
   `
 
+function useIncentiveData(incentiveId: string) {
+  const [incentiveData, setIncentiveData] = useState<(string | number)[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (incentiveId === '') {
+        return
+      }
+
+      const variables = {
+        id: incentiveId.toLowerCase()
+      }
+
+      console.log('pulling incentive data from graph...')
+      console.log(incentiveId)
+
+      try {
+        const data = await request(endpoint, INCENTIVE_ID_QUERY, variables)
+        if (data.incentive === null) {
+          return
+        }
+        setIncentiveData([data.incentive.rewardToken, data.incentive.pool, data.incentive.startTime, data.incentive.endTime, data.incentive.vestingPeriod, data.incentive.refundee])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchData()
+  }, [incentiveId])
+
+  return incentiveData;
+}
+
+function RewardInformation({ rewardInfo }: { rewardInfo: any }) {
+  return (
+    <div>
+      <h3>Reward Information:</h3>
+      <div>
+        <p>reward: {ethers.utils.formatUnits(rewardInfo[0], 18).slice(0, -14)} tokens</p>
+        <p>maxReward: {ethers.utils.formatUnits(rewardInfo[1], 18).slice(0, -14)} tokens</p>
+        <p>secondsInsideX128: {rewardInfo[2].shr(128).toString()} seconds</p>
+      </div>
+    </div>
+  );
+}
+
 export function RewardInfo() {
   const { address, isConnected } = useAccount()
   const [params, setParams] = useState({
@@ -28,7 +73,7 @@ export function RewardInfo() {
     tokenId: '',
   })
 
-  const [incentiveData, setIncentiveData] = useState<(string | number)[]>([]);
+  const incentiveData = useIncentiveData(params.incentiveId);
 
   const { data: rewardInfo } = useContractRead({
     address: '0x206439339d40aA4Ce1A57CB8Cc400e67B315DD15',
@@ -40,39 +85,10 @@ export function RewardInfo() {
     ]
   })
 
-  const fetchData = async () => {
-    if (params.incentiveId === '') {
-      return
-    }
-    
-    const variables = {
-      id: params.incentiveId.toLowerCase()
-    }
-
-    console.log('pulling incentive data from graph...')
-    console.log(params.incentiveId)
-
-    try {
-      const data = await request(endpoint, INCENTIVE_ID_QUERY, variables)
-      if (data.incentive === null) {
-        return
-      }
-      setIncentiveData([data.incentive.rewardToken, data.incentive.pool, data.incentive.startTime, data.incentive.endTime, data.incentive.vestingPeriod, data.incentive.refundee])
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-
-
   const handleChange = (e) => {
     const { name, value } = e.target
     setParams((prevParams) => ({ ...prevParams, [name]: value }))
   }
-
-  useEffect(() => {
-    fetchData()
-  }, [params])
 
   return (
     <div>
@@ -93,16 +109,7 @@ export function RewardInfo() {
         onChange={handleChange}
         placeholder="Enter Token Id"
       />
-      {rewardInfo && (
-        <div>
-          <h3>Reward Information:</h3>
-          <div>
-            <p>reward: {ethers.utils.formatUnits(rewardInfo[0], 18).slice(0, -14)} tokens</p>
-            <p>maxReward: {ethers.utils.formatUnits(rewardInfo[1], 18).slice(0, -14)} tokens</p>
-            <p>secondsInsideX128: {rewardInfo[2].shr(128).toString()} seconds</p>
-          </div>
-        </div>
-    )}
+      {rewardInfo && <RewardInformation rewardInfo={rewardInfo} />}
     </div>
   )
 }

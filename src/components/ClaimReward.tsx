@@ -1,5 +1,5 @@
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction, useContractRead, useAccount } from 'wagmi'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { request, gql } from 'graphql-request'
 import { useQuery } from 'react-query'
@@ -116,9 +116,11 @@ export function ClaimReward() {
   const handleChange = (e) => {
     const { name, value } = e.target
     setParams((prevParams) => ({ ...prevParams, [name]: value }))
-    
-    debouncedFetchData()
   }
+
+  useEffect(() => {
+    fetchData()
+  }, [params])
 
   const handleUnstake = async () => {
     writeUnstakeToken!()
