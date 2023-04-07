@@ -117,11 +117,6 @@ export function Stake() {
 
     console.log("Making write call...")
 
-    console.log('Incentive Data:')
-    console.log('-----------------')
-    console.log(parseInt(params.tokenId, 10))
-    console.log(incentiveData)
-
     writeStakeToken!()  
   }
 

@@ -59,18 +59,6 @@ export function CreateIncentive() {
       return
     }
 
-    console.log(isError)
-    console.log(error)
-
-    console.log('Making write call......')
-    console.log('rewardToken: ', params.rewardToken)
-    console.log('rewardAmount: ', params.rewardAmount)
-    console.log('poolPair: ', params.poolPair)
-    console.log('startTimestamp: ', params.startTimestamp)
-    console.log('endTimestamp: ', params.endTimestamp)
-    console.log('vestingPeriod: ', params.vestingPeriod)
-    console.log('refundee: ', params.refundee)
-
     writeCreateIncentive!()
   }
 

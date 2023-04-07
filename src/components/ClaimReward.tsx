@@ -121,11 +121,6 @@ export function ClaimReward() {
   }
 
   const handleUnstake = async () => {
-    console.log('UnStaking Token')
-    console.log('----------------')
-    console.log('incentiveId: ', params.incentiveId)
-    console.log('tokenId: ', params.tokenId)
-    console.log(incentiveData)
     writeUnstakeToken!()
   }
   const handleClaimReward = async () => {
