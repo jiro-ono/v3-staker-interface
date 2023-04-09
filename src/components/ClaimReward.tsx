@@ -7,7 +7,6 @@ import { debounce } from 'lodash'
 
 import V3StakerArtifact from '../contracts/artifacts/V3Staker.json'
 
-
 const endpoint = "https://api.thegraph.com/subgraphs/name/jiro-ono/v3-staker"
 const INCENTIVE_ID_QUERY = gql`
     query incentiveKey($id: String!) {
